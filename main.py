@@ -16,7 +16,7 @@ MAIN_PAGE_HTML = """\
   <body>
     <form action="/submit" method="post">
 	  <h2>Integration Tool </h2>
-	  <div>The tool provides a facility to transform a csv file in the GCS cloud storage into the following data upload-gcs-data for "Local Amenities Map".</div>
+	  <div>The tool provides a facility to transform a csv file in the Google cloud storage into the following data model for "Local Amenities Map".</div>
 	  <ol>
 		<li> Postcode </li>
 		<li> Outcode </li>
@@ -25,8 +25,8 @@ MAIN_PAGE_HTML = """\
 		<li> Train Station </li>
 		<li> School </li>
 	  </ol>
-	  <div>Enter csv file name uploaded in GCS cloud storage (with .csv extension) : <input type="text" name="filename"><div><br/>
-	  <div>Enter a model number to be considered for the csv upload : <input type="text" name="model"></div>
+	  <div>Enter a csv file name uploaded in Google cloud storage (with .csv extension) : <input type="text" name="filename"><div><br/>
+	  <div>Enter a model number to be considered for the csv file : <input type="text" name="model"></div>
 	  <br/>
       <div><input type="submit" value="Submit"></div>
     </form>
@@ -40,7 +40,7 @@ class MainPage(webapp2.RequestHandler):
 		
 class TransformData(webapp2.RequestHandler):
 	def post(self):
-		bucket_name = os.environ.get('upload-gcs-data.appspot.com', app_identity.get_default_gcs_bucket_name())
+		bucket_name = os.environ.get('local-amenities.appspot.com', app_identity.get_default_gcs_bucket_name())
 		self.response.headers['Content-Type'] = 'text/plain'
 		self.response.write('Demo GCS Application running from Version: '
                         + os.environ['CURRENT_VERSION_ID'] + '\n')
@@ -83,7 +83,7 @@ class TransformData(webapp2.RequestHandler):
 				name = row['name']
 				postcode = row['postcode'].upper().replace(' ','')
 				address = row['address']
-				query = GP.gql("WHERE postcode = :1", postcode)
+				query = GP.gql('WHERE postcode=:1', postcode)
 				if query.count() !=0  :
 					record = query.get()
 					record.name = unicode(name, "utf-8")
@@ -127,7 +127,7 @@ class TransformData(webapp2.RequestHandler):
 					long = 0.00
 				coord = {'latitude': lat, 'longitude': long}	
 				point = '{latitude}, {longitude}'.format(**coord)
-				query = Outcode.gql("WHERE outcode = :1", code)
+				query = Outcode.gql('WHERE outcode=:1', code)
 				if query.count() !=0  :
 					record = query.get()
 					record.lat_long = point
@@ -167,7 +167,7 @@ class TransformData(webapp2.RequestHandler):
 					long = 0.00
 				coord = {'latitude': lat, 'longitude': long}	
 				point = '{latitude}, {longitude}'.format(**coord)
-				query = Postcode.gql("WHERE postcode = :1", code)
+				query = Postcode.gql('WHERE postcode=:1', code)
 				if query.count() !=0  :
 					record = query.get()
 					record.lat_long = point
@@ -206,7 +206,7 @@ class TransformData(webapp2.RequestHandler):
 				coord = {'latitude': lat, 'longitude': long}	
 				point = '{latitude}, {longitude}'.format(**coord)
 				name = row['name']
-				query = TrainStation.gql("WHERE name = :1", name)
+				query = TrainStation.gql('WHERE name = :1', name)
 				if query.count() !=0  :
 					record = query.get()
 					record.lat_long = point
@@ -248,7 +248,7 @@ class TransformData(webapp2.RequestHandler):
 				name = row['name']
 				postcode = row['postcode'].upper().replace(' ','')
 				address = row['address']
-				query = Supermarket.gql("WHERE postcode = :1", postcode)
+				query = Supermarket.gql('WHERE postcode=:1', postcode)
 				if query.count() !=0  :
 					record = query.get()
 					record.name = unicode(name, "utf-8")
@@ -294,7 +294,7 @@ class TransformData(webapp2.RequestHandler):
 				name = row['name']
 				postcode = row['postcode'].upper().replace(' ','')
 				address = row['address']
-				query = School.gql("WHERE postcode = :1", postcode)
+				query = School.gql('WHERE postcode=:1', postcode)
 				if query.count() !=0  :
 					record = query.get()
 					record.name = unicode(name, "utf-8")
