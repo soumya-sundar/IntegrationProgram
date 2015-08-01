@@ -1,0 +1,16 @@
+application: upload-gcs-data
+version: 2
+runtime: python27
+api_version: 1
+threadsafe: yes
+
+libraries:
+- name: webapp2
+  version: latest
+
+- name: jinja2
+  version: latest
+
+handlers: 
+- url: /.*
+  script: main.app
