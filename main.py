@@ -11,6 +11,7 @@ import logging
 from models import *
 logging.getLogger().setLevel(logging.DEBUG)
 
+#HTML template for main page.
 MAIN_PAGE_HTML = """\
 <html>
   <body>
@@ -33,11 +34,13 @@ MAIN_PAGE_HTML = """\
   </body>
 </html>
 """
-		
+
+#Render the main page of the application		
 class MainPage(webapp2.RequestHandler):							   
 	def get(self):
 		self.response.write(MAIN_PAGE_HTML)
-		
+
+#Access a file from GCS default bucket and transform into entities specific to a given data model.	
 class TransformData(webapp2.RequestHandler):
 	def post(self):
 		bucket_name = os.environ.get('local-amenities.appspot.com', app_identity.get_default_gcs_bucket_name())
@@ -48,6 +51,8 @@ class TransformData(webapp2.RequestHandler):
 		bucket = '/' + bucket_name
 		filename  = bucket + '/' + cgi.escape(self.request.get('filename'))
 		modelNumber = cgi.escape(self.request.get('model'))
+		
+		#Based on a user input transform into data model entities.
 		if modelNumber == '1':
 			self.AccessPostcodes(filename)
 		elif modelNumber == '2':
@@ -62,7 +67,8 @@ class TransformData(webapp2.RequestHandler):
 			self.AccessSchool(filename)
 		else:
 			self.response.write("Model number is not provided")
-			
+	
+	#Function to tranform GCS file contents into GP entities.
 	def AccessGP(self,filename):
 		try:
 			gp_list = []
@@ -109,6 +115,7 @@ class TransformData(webapp2.RequestHandler):
 			self.response.write('\n\nThere was an error running the program! '
 								'Please check the logs for more details.\n')
 
+	#Function to tranform GCS file contents into outcode entities.
 	def AccessOutcodes(self,filename):
 		try:
 			outcode_list = []
@@ -148,7 +155,8 @@ class TransformData(webapp2.RequestHandler):
 			logging.exception(e)
 			self.response.write('\n\nThere was an error running the program! '
 								'Please check the logs for more details.\n')
-								
+	
+	#Function to tranform GCS file contents into postcode entities.
 	def AccessPostcodes(self, filename):
 		try:
 			postcode_list =  []
@@ -187,7 +195,8 @@ class TransformData(webapp2.RequestHandler):
 			logging.exception(e)
 			self.response.write('\n\nThere was an error running the program! '
 								'Please check the logs for more details.\n')
-								
+	
+	#Function to tranform GCS file contents into train station entities.
 	def AccessTrainStation(self,filename):
 		try:
 			train_list = []
@@ -227,7 +236,8 @@ class TransformData(webapp2.RequestHandler):
 			logging.exception(e)
 			self.response.write('\n\nThere was an error running the program! '
 								'Please check the logs for more details.\n')
-								
+	
+	#Function to tranform GCS file contents into supermarket entities.
 	def AccessSupermarket(self, filename):
 		try:
 			Supermarket_list = []
@@ -274,6 +284,7 @@ class TransformData(webapp2.RequestHandler):
 			self.response.write('\n\nThere was an error running the program! '
 								'Please check the logs for more details.\n')
 
+	#Function to tranform GCS file contents into school entities.
 	def AccessSchool(self,filename):
 		try:
 			School_list = []
@@ -320,6 +331,7 @@ class TransformData(webapp2.RequestHandler):
 			self.response.write('\n\nThere was an error running the program! '
 								'Please check the logs for more details.\n')
 
+	#Function to create a batch put with maximum 10000 entities.
 	def batchPut(self, entityList, batchSize=10000):
 		putList = []
 		count = len(entityList)
