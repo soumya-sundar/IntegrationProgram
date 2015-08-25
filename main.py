@@ -1,7 +1,8 @@
+# Cloud storage library reference - https://cloud.google.com/appengine/docs/python/googlecloudstorageclient/download
+import cloudstorage as gcs
 import logging
 import os, cgi
 import csv, codecs, cStringIO
-import cloudstorage as gcs
 import webapp2
 import string
 import getpass
@@ -11,6 +12,7 @@ import logging
 from models import *
 logging.getLogger().setLevel(logging.DEBUG)
 
+#HTML templates reference - https://cloud.google.com/appengine/docs/python/gettingstartedpython27/handlingforms
 #HTML template for main page.
 MAIN_PAGE_HTML = """\
 <html>
